@@ -15,16 +15,23 @@ namespace plotproject.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult DriverEnter()
         {
-            ViewData["Message"] = "Your application description page.";
+            ViewData["Message"] = "This is where the driver enters the lot";
 
             return View();
         }
 
-        public IActionResult Contact()
+        public IActionResult DriverPark()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "This is where the driver chooses where to park";
+
+            return View();
+        }
+
+        public IActionResult DriverExit()
+        {
+            ViewData["Message"] = "This is where the driver pays and leaves";
 
             return View();
         }
