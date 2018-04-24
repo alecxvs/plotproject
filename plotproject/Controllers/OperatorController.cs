@@ -9,31 +9,41 @@ using plotproject.Models;
 
 namespace plotproject.Controllers
 {
-    public class VehiclesController : Controller
+    public class OperatorController : Controller
     {
         private readonly dbContext _context;
 
-        public VehiclesController(dbContext context)
+        public OperatorController(dbContext context)
         {
             _context = context;
         }
 
-        // GET: Vehicles
-        public async Task<IActionResult> Index()
+        public async Task<PartialViewResult> IndexVehiclesAsync()
         {
-            return View(await _context.Vehicle.ToListAsync());
+            return PartialView("_IndexVehicles", await _context.Vehicle.ToListAsync());
         }
 
-        // GET: http://localhost/Vehicles/Details/5
-        public async Task<IActionResult> Details(string license)
+        public async Task<PartialViewResult> IndexTicketsAsync()
         {
-            if (license == null)
+            return PartialView("_IndexTickets", await _context.Ticket.ToListAsync());
+        }
+
+        // GET: Vehicles
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        // GET: Vehicles/Details/5
+        public async Task<IActionResult> Details(string id)
+        {
+            if (id == null)
             {
                 return NotFound();
             }
 
             var vehicle = await _context.Vehicle
-                .SingleOrDefaultAsync(m => m.License == license);
+                .SingleOrDefaultAsync(m => m.License == id);
             if (vehicle == null)
             {
                 return NotFound();

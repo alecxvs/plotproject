@@ -14,5 +14,6 @@ namespace plotproject.Models
         }
 
         public DbSet<plotproject.Models.Vehicle> Vehicle { get; set; }
+        public DbSet<plotproject.Models.Ticket> Ticket { get; set; }
     }
 }
