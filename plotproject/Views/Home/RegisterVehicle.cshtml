@@ -1,0 +1,37 @@
+﻿@model Vehicle
+
+@{
+    ViewData["Title"] = "RegisterVehicle";
+}
+
+<div class="grid">
+    <h2>RegisterVehicle</h2>
+
+    <form asp-action="RegisterVehicle" method="post">
+        @Html.ValidationMessageFor(v => v.License)
+        <br />
+        @Html.LabelFor(v => v.License)
+        @Html.EditorFor(v => v.License)
+
+        @Html.ValidationMessageFor(v => v.Make)
+        <br />
+        @Html.LabelFor(v => v.Make)
+        @Html.EditorFor(v => v.Make)
+
+        @Html.ValidationMessageFor(v => v.Model)
+        <br />
+        @Html.LabelFor(v => v.Model)
+        @Html.EditorFor(v => v.Model)
+
+        @Html.ValidationMessageFor(v => v.Color)
+        <br />
+        @Html.LabelFor(v => v.Color)
+        @Html.EditorFor(v => v.Color)
+
+        <Button>Register</Button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
