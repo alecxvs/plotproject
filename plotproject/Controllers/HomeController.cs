@@ -41,12 +41,13 @@ namespace plotproject.Controllers
             if (vehicle == null)
                 return RedirectToAction(nameof(HomeController.RegisterVehicle), new { License = license } );
 
+            HttpContext.Session.SetString("VehicleLicense", vehicle.License);
             return RedirectToAction(nameof(HomeController.Enter));
         }
 
         public IActionResult RegisterVehicle(string license)
         {
-            ViewData["license"] = license;
+            TempData["license"] = license;
             return View();
         }
 
@@ -71,12 +72,14 @@ namespace plotproject.Controllers
 
         public IActionResult Enter()
         {
-            var license = HttpContext.Session.GetString("VehicleLicense");
+            var vehicle = _context.Vehicle.Find(HttpContext.Session.GetString("VehicleLicense"));
+            if (vehicle == null)
+                return RedirectToAction(nameof(HomeController.ReadLicense));
+
             // Get an open ticket for the current vehicle
-            var ticket = _context.Ticket.SingleOrDefaultAsync(t => t.VehicleLicense == license && t.OutTime == null);
+            var ticket = _context.Ticket.SingleOrDefaultAsync(t => t.VehicleLicense == vehicle.License && t.OutTime == null);
             if (ticket != null)
             {
-                var vehicle = _context.Vehicle.Find(license);
                 // If the ticket is open, and the vehicle has a parking spot, go to checkout
                 if (vehicle.ParkingSpot != null)
                     return RedirectToAction(nameof(HomeController.Checkout), new { ticket });
@@ -100,11 +103,13 @@ namespace plotproject.Controllers
             return View(ticket);
         }
 
-        public IActionResult Park()
+        public async Task<IActionResult> Park()
         {
-            ViewData["Message"] = "This is where the driver chooses where to park";
-
-            return View();
+            var ticket = await _context.Ticket.FindAsync(HttpContext.Session.GetInt32("TicketId"));
+            if (ticket == null)
+                return RedirectToAction(nameof(HomeController.Enter));
+            ViewData["parkingSpots"] = await _context.ParkingSpot.ToListAsync();
+            return View(_context.ParkingSpot.Where(s => s.TypeId == ticket.TypeId && s.VehicleLicense == null));
         }
 
         public IActionResult Checkout()

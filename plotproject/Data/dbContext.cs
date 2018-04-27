@@ -17,5 +17,6 @@ namespace plotproject.Models
         public DbSet<plotproject.Models.Vehicle> Vehicle { get; set; }
         public DbSet<plotproject.Models.Ticket> Ticket { get; set; }
         public DbSet<plotproject.Models.ParkingType> ParkingType { get; set; }
+        public DbSet<plotproject.Models.ParkingSpot> ParkingSpot { get; set; }
     }
 }
