@@ -1,0 +1,34 @@
+﻿@model Ticket
+
+@{
+    ViewData["Title"] = "Enter";
+}
+
+<div class="grid">
+    <h2>Enter</h2>
+
+    <form asp-action="RegisterVehicle" method="post">
+        @Html.ValidationMessageFor(v => v.VehicleLicense)
+        <br />
+        @Html.LabelFor(v => v.VehicleLicense)
+        @Html.EditorFor(v => v.VehicleLicense)
+
+        @Html.ValidationMessageFor(v => v.TypeId)
+        <br />
+        @Html.LabelFor(v => v.TypeId)
+        @Html.EditorFor(v => v.TypeId)
+
+        @Html.ValidationMessageFor(v => v.InTime)
+        <br />
+        @Html.LabelFor(v => v.InTime)
+        @Html.EditorFor(v => v.InTime)
+
+
+        <Button>Enter</Button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
