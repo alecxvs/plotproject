@@ -13,6 +13,11 @@ namespace plotproject.Controllers
     {
         private readonly dbContext _context;
 
+        public HomeController(dbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -23,15 +28,15 @@ namespace plotproject.Controllers
             return View();
         }
 
-        public IActionResult LookupVehicle(string license)
+        public async Task<IActionResult> LookupVehicle(string license)
         {
             if (license == null)
                 return NotFound();
 
-            var vehicle = _context.Vehicle.SingleOrDefaultAsync(m => m.License == license);
+            var vehicle = await _context.Vehicle.SingleOrDefaultAsync(m => m.License == license);
 
             if (vehicle == null)
-                return RedirectToAction(nameof(HomeController.RegisterVehicle));
+                return RedirectToAction(nameof(HomeController.RegisterVehicle), new { License = license } );
 
             return RedirectToAction("Enter");
         }

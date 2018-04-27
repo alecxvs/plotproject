@@ -6,6 +6,8 @@ namespace plotproject.Models
     public class Vehicle
     {
         [Key]
+        [RegularExpression(@"^\w+$")]
+        [StringLength(6, MinimumLength = 1)]
         public string License { get; set; }
         [Required]
         public string Make { get; set; }

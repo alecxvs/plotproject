@@ -1,0 +1,22 @@
+﻿@model Vehicle
+
+@{
+    ViewData["Title"] = "Read License Plate";
+}
+
+<div class="grid">
+    <h2>Read License Plate</h2>
+    <img src="~/images/Security-Camera-icon.png" />
+
+    <form asp-action="LookupVehicle" method="get">
+        @Html.ValidationMessageFor(v => v.License)
+        <br />
+        @Html.LabelFor(v => v.License)
+        @Html.EditorFor(v => v.License)
+        <Button>Lookup</Button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
