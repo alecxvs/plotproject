@@ -58,12 +58,12 @@ namespace plotproject
 
                 routes.MapRoute(
                     name: "operator",
-                    template: "Operator/{action=Index}",
-                    defaults: new { controller = "Controller" });
+                    template: "operator/{action=Index}",
+                    defaults: new { controller = "Operator" });
 
                 routes.MapRoute(
                     name: "operatorControls",
-                    template: "Operator/{controller:regex(^(Vehicles|Tickets|ParkingTypes))}/{action}/{id?}");
+                    template: "operator/{controller:regex(^(Vehicles|Tickets|ParkingTypes))}/{action}/{id?}");
             });
         }
     }
