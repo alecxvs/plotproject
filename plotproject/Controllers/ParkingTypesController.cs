@@ -9,85 +9,85 @@ using plotproject.Models;
 
 namespace plotproject.Controllers
 {
-    public class VehiclesController : Controller
+    public class ParkingTypesController : Controller
     {
         private readonly dbContext _context;
 
-        public VehiclesController(dbContext context)
+        public ParkingTypesController(dbContext context)
         {
             _context = context;
         }
 
-        // GET: Vehicles
+        // GET: ParkingTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vehicle.ToListAsync());
+            return View(await _context.ParkingType.ToListAsync());
         }
 
-        // GET: Vehicles/Details/5
-        public async Task<IActionResult> Details(string id)
+        // GET: ParkingTypes/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
-                .SingleOrDefaultAsync(m => m.License == id);
-            if (vehicle == null)
+            var parkingType = await _context.ParkingType
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (parkingType == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(parkingType);
         }
 
-        // GET: Vehicles/Create
+        // GET: ParkingTypes/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Vehicles/Create
+        // POST: ParkingTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("License,Make,Model,Color")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("Id,Description")] ParkingType parkingType)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vehicle);
+                _context.Add(parkingType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicle);
+            return View(parkingType);
         }
 
-        // GET: Vehicles/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        // GET: ParkingTypes/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle.SingleOrDefaultAsync(m => m.License == id);
-            if (vehicle == null)
+            var parkingType = await _context.ParkingType.SingleOrDefaultAsync(m => m.Id == id);
+            if (parkingType == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
+            return View(parkingType);
         }
 
-        // POST: Vehicles/Edit/5
+        // POST: ParkingTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("License,Make,Model,Color")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description")] ParkingType parkingType)
         {
-            if (id != vehicle.License)
+            if (id != parkingType.Id)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace plotproject.Controllers
             {
                 try
                 {
-                    _context.Update(vehicle);
+                    _context.Update(parkingType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.License))
+                    if (!ParkingTypeExists(parkingType.Id))
                     {
                         return NotFound();
                     }
@@ -112,41 +112,41 @@ namespace plotproject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicle);
+            return View(parkingType);
         }
 
-        // GET: Vehicles/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        // GET: ParkingTypes/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
-                .SingleOrDefaultAsync(m => m.License == id);
-            if (vehicle == null)
+            var parkingType = await _context.ParkingType
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (parkingType == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(parkingType);
         }
 
-        // POST: Vehicles/Delete/5
+        // POST: ParkingTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vehicle = await _context.Vehicle.SingleOrDefaultAsync(m => m.License == id);
-            _context.Vehicle.Remove(vehicle);
+            var parkingType = await _context.ParkingType.SingleOrDefaultAsync(m => m.Id == id);
+            _context.ParkingType.Remove(parkingType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VehicleExists(string id)
+        private bool ParkingTypeExists(int id)
         {
-            return _context.Vehicle.Any(e => e.License == id);
+            return _context.ParkingType.Any(e => e.Id == id);
         }
     }
 }

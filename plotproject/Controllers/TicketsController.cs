@@ -9,85 +9,90 @@ using plotproject.Models;
 
 namespace plotproject.Controllers
 {
-    public class VehiclesController : Controller
+    public class TicketsController : Controller
     {
         private readonly dbContext _context;
 
-        public VehiclesController(dbContext context)
+        public TicketsController(dbContext context)
         {
             _context = context;
         }
 
-        // GET: Vehicles
+        // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vehicle.ToListAsync());
+            var dbContext = _context.Ticket.Include(t => t.Vehicle);
+            return View(await dbContext.ToListAsync());
         }
 
-        // GET: Vehicles/Details/5
-        public async Task<IActionResult> Details(string id)
+        // GET: Tickets/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
-                .SingleOrDefaultAsync(m => m.License == id);
-            if (vehicle == null)
+            var ticket = await _context.Ticket
+                .Include(t => t.Vehicle)
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (ticket == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(ticket);
         }
 
-        // GET: Vehicles/Create
+        // GET: Tickets/Create
         public IActionResult Create()
         {
+            ViewData["VehicleLicense"] = new SelectList(_context.Vehicle, "License", "License");
             return View();
         }
 
-        // POST: Vehicles/Create
+        // POST: Tickets/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("License,Make,Model,Color")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("Id,InTime,OutTime,VehicleLicense")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vehicle);
+                _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicle);
+            ViewData["VehicleLicense"] = new SelectList(_context.Vehicle, "License", "License", ticket.VehicleLicense);
+            return View(ticket);
         }
 
-        // GET: Vehicles/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        // GET: Tickets/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle.SingleOrDefaultAsync(m => m.License == id);
-            if (vehicle == null)
+            var ticket = await _context.Ticket.SingleOrDefaultAsync(m => m.Id == id);
+            if (ticket == null)
             {
                 return NotFound();
             }
-            return View(vehicle);
+            ViewData["VehicleLicense"] = new SelectList(_context.Vehicle, "License", "License", ticket.VehicleLicense);
+            return View(ticket);
         }
 
-        // POST: Vehicles/Edit/5
+        // POST: Tickets/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("License,Make,Model,Color")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,InTime,OutTime,VehicleLicense")] Ticket ticket)
         {
-            if (id != vehicle.License)
+            if (id != ticket.Id)
             {
                 return NotFound();
             }
@@ -96,12 +101,12 @@ namespace plotproject.Controllers
             {
                 try
                 {
-                    _context.Update(vehicle);
+                    _context.Update(ticket);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VehicleExists(vehicle.License))
+                    if (!TicketExists(ticket.Id))
                     {
                         return NotFound();
                     }
@@ -112,41 +117,43 @@ namespace plotproject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(vehicle);
+            ViewData["VehicleLicense"] = new SelectList(_context.Vehicle, "License", "License", ticket.VehicleLicense);
+            return View(ticket);
         }
 
-        // GET: Vehicles/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        // GET: Tickets/Delete/5
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicle
-                .SingleOrDefaultAsync(m => m.License == id);
-            if (vehicle == null)
+            var ticket = await _context.Ticket
+                .Include(t => t.Vehicle)
+                .SingleOrDefaultAsync(m => m.Id == id);
+            if (ticket == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(ticket);
         }
 
-        // POST: Vehicles/Delete/5
+        // POST: Tickets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vehicle = await _context.Vehicle.SingleOrDefaultAsync(m => m.License == id);
-            _context.Vehicle.Remove(vehicle);
+            var ticket = await _context.Ticket.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Ticket.Remove(ticket);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VehicleExists(string id)
+        private bool TicketExists(int id)
         {
-            return _context.Vehicle.Any(e => e.License == id);
+            return _context.Ticket.Any(e => e.Id == id);
         }
     }
 }

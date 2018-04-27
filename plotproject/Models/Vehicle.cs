@@ -8,6 +8,7 @@ namespace plotproject.Models
         [Key]
         [RegularExpression(@"^\w+$")]
         [StringLength(6, MinimumLength = 1)]
+        [Required]
         public string License { get; set; }
         [Required]
         public string Make { get; set; }
