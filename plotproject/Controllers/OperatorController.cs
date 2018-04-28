@@ -11,9 +11,9 @@ namespace plotproject.Controllers
 {
     public class OperatorController : Controller
     {
-        private readonly dbContext _context;
+        private readonly PLotContext _context;
 
-        public OperatorController(dbContext context)
+        public OperatorController(PLotContext context)
         {
             _context = context;
         }

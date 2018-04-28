@@ -1,0 +1,14 @@
+﻿@model IEnumerable<SelectListItem>
+
+<div class="card mb-4 box-shadow">
+    <div class="card-header">Vehicles</div>
+    <div class="card-body">
+        <select asp-items="Model" onchange="document.getElementById('license').value = this.value"></select>
+        <form>
+            <input type="hidden" name="license" id="license" />
+            @Html.ActionLink("Edit", "Edit", "Vehicles", new { /* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", "Vehicles", new { /* id=item.PrimaryKey */ })
+        </form>
+    </div>
+</div>
+    

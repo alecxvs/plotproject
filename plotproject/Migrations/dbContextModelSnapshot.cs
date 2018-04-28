@@ -10,7 +10,7 @@ using System;
 
 namespace plotproject.Migrations
 {
-    [DbContext(typeof(dbContext))]
+    [DbContext(typeof(PLotContext))]
     partial class dbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -25,14 +25,14 @@ namespace plotproject.Migrations
                     b.Property<int>("Number")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("TypeIdId");
+                    b.Property<int>("TypeId");
 
                     b.Property<string>("VehicleLicense")
                         .IsConcurrencyToken();
 
                     b.HasKey("Number");
 
-                    b.HasIndex("TypeIdId");
+                    b.HasIndex("TypeId");
 
                     b.HasIndex("VehicleLicense")
                         .IsUnique()
@@ -64,16 +64,16 @@ namespace plotproject.Migrations
 
                     b.Property<DateTime>("OutTime");
 
-                    b.Property<int>("TypeIdId");
+                    b.Property<int>("TypeId");
 
-                    b.Property<string>("VehicleIdLicense")
+                    b.Property<string>("VehicleLicense")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TypeIdId");
+                    b.HasIndex("TypeId");
 
-                    b.HasIndex("VehicleIdLicense");
+                    b.HasIndex("VehicleLicense");
 
                     b.ToTable("Ticket");
                 });
@@ -81,7 +81,8 @@ namespace plotproject.Migrations
             modelBuilder.Entity("plotproject.Models.Vehicle", b =>
                 {
                     b.Property<string>("License")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(6);
 
                     b.Property<string>("Color")
                         .IsRequired();
@@ -99,9 +100,9 @@ namespace plotproject.Migrations
 
             modelBuilder.Entity("plotproject.Models.ParkingSpot", b =>
                 {
-                    b.HasOne("plotproject.Models.ParkingType", "TypeId")
+                    b.HasOne("plotproject.Models.ParkingType", "Type")
                         .WithMany()
-                        .HasForeignKey("TypeIdId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("plotproject.Models.Vehicle", "Vehicle")
@@ -111,14 +112,14 @@ namespace plotproject.Migrations
 
             modelBuilder.Entity("plotproject.Models.Ticket", b =>
                 {
-                    b.HasOne("plotproject.Models.ParkingType", "TypeId")
+                    b.HasOne("plotproject.Models.ParkingType", "Type")
                         .WithMany()
-                        .HasForeignKey("TypeIdId")
+                        .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("plotproject.Models.Vehicle", "VehicleId")
+                    b.HasOne("plotproject.Models.Vehicle", "Vehicle")
                         .WithMany()
-                        .HasForeignKey("VehicleIdLicense")
+                        .HasForeignKey("VehicleLicense")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

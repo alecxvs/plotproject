@@ -11,9 +11,9 @@ namespace plotproject.Controllers
 {
     public class ParkingTypesController : Controller
     {
-        private readonly dbContext _context;
+        private readonly PLotContext _context;
 
-        public ParkingTypesController(dbContext context)
+        public ParkingTypesController(PLotContext context)
         {
             _context = context;
         }

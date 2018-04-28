@@ -12,7 +12,7 @@
         @Html.ValidationMessageFor(v => v.License)
         <br />
         @Html.LabelFor(v => v.License)
-        @Html.EditorFor(v => v.License)
+        @Html.TextBoxFor(v => v.License, new { oninput = "this.value = this.value.toUpperCase()" })
         <Button>Lookup</Button>
     </form>
 </div>

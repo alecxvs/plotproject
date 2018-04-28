@@ -8,8 +8,10 @@
     <h2>RegisterVehicle</h2>
 
     <form asp-action="RegisterVehicle" method="post">
+        @Html.ValidationMessageFor(v => v.License)
+        <br />
         @Html.LabelFor(v => v.License)
-        @Html.TextBoxFor(v => v.License, new { disabled = "disabled", @readonly = "readonly" })
+        @Html.TextBoxFor(v => v.License, new { @readonly = "readonly" })
 
         @Html.ValidationMessageFor(v => v.Make)
         <br />
@@ -25,7 +27,7 @@
         <br />
         @Html.LabelFor(v => v.Color)
         @Html.EditorFor(v => v.Color)
-
+        <br />
         <Button>Register</Button>
     </form>
 </div>

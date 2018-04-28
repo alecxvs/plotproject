@@ -12,9 +12,9 @@ namespace plotproject.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly dbContext _context;
+        private readonly PLotContext _context;
 
-        public HomeController(dbContext context)
+        public HomeController(PLotContext context)
         {
             _context = context;
         }
@@ -42,12 +42,11 @@ namespace plotproject.Controllers
                 return RedirectToAction(nameof(HomeController.RegisterVehicle), new { License = license } );
 
             HttpContext.Session.SetString("VehicleLicense", vehicle.License);
-            return RedirectToAction(nameof(HomeController.Enter));
+            return RedirectToAction(nameof(HomeController.Enter), new { VehicleLicense = license });
         }
 
         public IActionResult RegisterVehicle(string license)
         {
-            TempData["license"] = license;
             return View();
         }
 
@@ -65,19 +64,19 @@ namespace plotproject.Controllers
                 _context.Add(vehicle);
                 await _context.SaveChangesAsync();
                 HttpContext.Session.SetString("VehicleLicense", vehicle.License);
-                return RedirectToAction(nameof(HomeController.Enter));
+                return RedirectToAction(nameof(HomeController.Enter), new { VehicleLicense = vehicle.License });
             }
             return View(vehicle);
         }
 
-        public IActionResult Enter()
+        public async Task<IActionResult> Enter(string vehicleLicense)
         {
             var vehicle = _context.Vehicle.Find(HttpContext.Session.GetString("VehicleLicense"));
             if (vehicle == null)
                 return RedirectToAction(nameof(HomeController.ReadLicense));
 
             // Get an open ticket for the current vehicle
-            var ticket = _context.Ticket.SingleOrDefaultAsync(t => t.VehicleLicense == vehicle.License && t.OutTime == null);
+            var ticket = await _context.Ticket.SingleOrDefaultAsync(t => t.VehicleLicense == vehicle.License && t.OutTime == null);
             if (ticket != null)
             {
                 // If the ticket is open, and the vehicle has a parking spot, go to checkout
@@ -86,6 +85,7 @@ namespace plotproject.Controllers
                 // If the ticket is open but the vehicle is not parked, go to parking
                 return RedirectToAction(nameof(HomeController.Park), new { vehicle });
             }
+            ViewData["Types"] = await _context.ParkingType.ToListAsync();
             return View();
         }
 

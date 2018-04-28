@@ -7,9 +7,9 @@ using plotproject.Models;
 
 namespace plotproject.Models
 {
-    public class dbContext : DbContext
+    public class PLotContext : DbContext
     {
-        public dbContext (DbContextOptions<dbContext> options)
+        public PLotContext (DbContextOptions<PLotContext> options)
             : base(options)
         {
         }

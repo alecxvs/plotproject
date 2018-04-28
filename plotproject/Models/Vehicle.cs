@@ -17,5 +17,10 @@ namespace plotproject.Models
         [Required]
         public string Color { get; set; }
         public ParkingSpot ParkingSpot { get; set; }
+
+        public override string ToString()
+        {
+            return $"{License} - {Color} {Make} {Model}";
+        }
     }
 }

@@ -15,6 +15,13 @@ namespace plotproject.Models
         [ForeignKey("VehicleLicense")]
         public Vehicle Vehicle { get; set; }
         [Required]
-        public ParkingType TypeId { get; set; }
+        public int TypeId { get; set; }
+        [ForeignKey("TypeId")]
+        public ParkingType Type { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Id} ({Vehicle}) [{Type}] {InTime} to {OutTime}";
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace plotproject
 
             services.AddSession();
 
-            services.AddDbContext<dbContext>(options =>
+            services.AddDbContext<PLotContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("dbContext")));
         }
 

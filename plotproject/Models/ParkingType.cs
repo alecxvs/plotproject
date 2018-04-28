@@ -9,5 +9,10 @@ namespace plotproject.Models
         [StringLength(250)]
         [Required]
         public string Description { get; set; }
+
+        public override string ToString()
+        {
+            return Description;
+        }
     }
 }

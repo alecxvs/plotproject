@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace plotproject.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialCreate2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,7 +26,7 @@ namespace plotproject.Migrations
                 name: "Vehicle",
                 columns: table => new
                 {
-                    License = table.Column<string>(nullable: false),
+                    License = table.Column<string>(maxLength: 6, nullable: false),
                     Color = table.Column<string>(nullable: false),
                     Make = table.Column<string>(nullable: false),
                     Model = table.Column<string>(nullable: false)
@@ -42,15 +42,15 @@ namespace plotproject.Migrations
                 {
                     Number = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    TypeIdId = table.Column<int>(nullable: false),
+                    TypeId = table.Column<int>(nullable: false),
                     VehicleLicense = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ParkingSpot", x => x.Number);
                     table.ForeignKey(
-                        name: "FK_ParkingSpot_ParkingType_TypeIdId",
-                        column: x => x.TypeIdId,
+                        name: "FK_ParkingSpot_ParkingType_TypeId",
+                        column: x => x.TypeId,
                         principalTable: "ParkingType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -70,30 +70,30 @@ namespace plotproject.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     InTime = table.Column<DateTime>(nullable: false),
                     OutTime = table.Column<DateTime>(nullable: false),
-                    TypeIdId = table.Column<int>(nullable: false),
-                    VehicleIdLicense = table.Column<string>(nullable: false)
+                    TypeId = table.Column<int>(nullable: false),
+                    VehicleLicense = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Ticket", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ticket_ParkingType_TypeIdId",
-                        column: x => x.TypeIdId,
+                        name: "FK_Ticket_ParkingType_TypeId",
+                        column: x => x.TypeId,
                         principalTable: "ParkingType",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Ticket_Vehicle_VehicleIdLicense",
-                        column: x => x.VehicleIdLicense,
+                        name: "FK_Ticket_Vehicle_VehicleLicense",
+                        column: x => x.VehicleLicense,
                         principalTable: "Vehicle",
                         principalColumn: "License",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ParkingSpot_TypeIdId",
+                name: "IX_ParkingSpot_TypeId",
                 table: "ParkingSpot",
-                column: "TypeIdId");
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ParkingSpot_VehicleLicense",
@@ -103,14 +103,14 @@ namespace plotproject.Migrations
                 filter: "[VehicleLicense] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_TypeIdId",
+                name: "IX_Ticket_TypeId",
                 table: "Ticket",
-                column: "TypeIdId");
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ticket_VehicleIdLicense",
+                name: "IX_Ticket_VehicleLicense",
                 table: "Ticket",
-                column: "VehicleIdLicense");
+                column: "VehicleLicense");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -7,22 +7,37 @@
 <div class="grid">
     <h2>Enter</h2>
 
-    <form asp-action="RegisterVehicle" method="post">
-        @Html.ValidationMessageFor(v => v.VehicleLicense)
+    <form asp-action="Enter" method="post">
+        @Html.ValidationMessageFor(t => t.VehicleLicense)
         <br />
-        @Html.LabelFor(v => v.VehicleLicense)
-        @Html.EditorFor(v => v.VehicleLicense)
+        @Html.LabelFor(t => t.VehicleLicense)
+        @Html.TextBoxFor(t => t.VehicleLicense, new { @readonly = "readonly" })
 
-        @Html.ValidationMessageFor(v => v.TypeId)
+        @Html.ValidationMessageFor(t => t.Type)
         <br />
-        @Html.LabelFor(v => v.TypeId)
-        @Html.EditorFor(v => v.TypeId)
+        @Html.LabelFor(t => t.Type)
+        @Html.ListBoxFor(t => t.Type, new SelectList(ViewData["Types"] as IEnumerable<ParkingType>))
 
-        @Html.ValidationMessageFor(v => v.InTime)
-        <br />
-        @Html.LabelFor(v => v.InTime)
-        @Html.EditorFor(v => v.InTime)
-
+        @Html.LabelFor(t => t.InTime)
+        @Html.EditorFor(t => t.InTime)
+        <environment include="Development">
+            <script src="~/lib/luxon/luxon.min.js"></script>
+        </environment>
+        <environment exclude="Development">
+            <script src="https://cdn.jsdelivr.net/npm/luxon@1.2.0/build/cjs-browser/luxon.js"
+                    integrity="sha256-mMmJmS0UZFpH6y0J2pnl5QwC2uiN+LcbMkysZa0b6Jk="
+                    crossorigin="anonymous">
+            </script>
+        </environment>
+        <script type="text/javascript">
+            (function () {
+                function startTime() {
+                    document.getElementById('InTime').value = luxon.DateTime.local().toFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    t = setTimeout(function () { startTime() }, 500);
+                }
+                startTime();
+            })();
+        </script>
 
         <Button>Enter</Button>
     </form>

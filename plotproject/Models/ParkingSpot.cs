@@ -9,11 +9,18 @@ namespace plotproject.Models
         [Key]
         public int Number { get; set; }
         [ConcurrencyCheck]
-        [ForeignKey("License")]
         public String VehicleLicense { get; set; }
+        [ForeignKey("VehicleLicense")]
         public Vehicle Vehicle { get; set; }
         [Required]
-        public ParkingType TypeId { get; set; }
+        public int TypeId { get; set; }
+        [ForeignKey("TypeId")]
+        public ParkingType Type { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Number} - {Type} (Occupant: {Vehicle})";
+        }
     }
 }
 

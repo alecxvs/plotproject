@@ -7,6 +7,14 @@ form {
     width: 100%;
 }
 
+form label {
+    display: block;
+}
+
+form input,select {
+    width: 100%;
+}
+
 form .field-validation-error {
     color: indianred;
 }
@@ -15,7 +23,7 @@ header {
     padding: 2em 6em;
     margin-bottom: 1em;
     text-align: center;
-    border-bottom: 2px solid grey;
+    border-bottom: 1px solid grey;
     box-shadow: grey 0 3px 3px;
 }
 

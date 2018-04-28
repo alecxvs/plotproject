@@ -11,9 +11,9 @@ namespace plotproject.Controllers
 {
     public class TicketsController : Controller
     {
-        private readonly dbContext _context;
+        private readonly PLotContext _context;
 
-        public TicketsController(dbContext context)
+        public TicketsController(PLotContext context)
         {
             _context = context;
         }
