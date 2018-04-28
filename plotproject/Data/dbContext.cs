@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DebugEFCore;
 using Microsoft.EntityFrameworkCore;
 using plotproject.Models;
 
@@ -12,6 +13,11 @@ namespace plotproject.Models
         public PLotContext (DbContextOptions<PLotContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.EnableLogging(true);
         }
 
         public DbSet<plotproject.Models.Vehicle> Vehicle { get; set; }

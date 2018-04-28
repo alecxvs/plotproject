@@ -1,0 +1,20 @@
+﻿@model plotproject.Models.ParkingSpot
+
+<div>
+    <h4>ParkingSpot</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Type.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Vehicle)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Vehicle.License)
+        </dd>
+    </dl>
+</div>

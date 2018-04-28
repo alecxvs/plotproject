@@ -18,6 +18,27 @@ namespace plotproject.Controllers
             _context = context;
         }
 
+        public ViewResult BigDemo()
+        {
+            _context.Vehicle.Add(
+                new Vehicle
+                {
+                    License = "A4F8J3",
+                    Color = "Red",
+                    Make = "Ford",
+                    Model = "Explorer"
+                }
+            );
+            _context.SaveChanges();
+            var vehicle = _context.Vehicle.Find("A4F8J3");
+            vehicle.ParkingSpot = _context.ParkingSpot.Find(12);
+            _context.SaveChanges();
+            _context.Vehicle.Remove(vehicle);
+            _context.SaveChanges();
+
+            return View(_context.ParkingSpot.Find(12));
+        }
+
         public PartialViewResult IndexVehicles()
         {
             return PartialView("_Index", _context.Vehicle.Select(v => v.ToString()));
