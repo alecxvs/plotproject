@@ -33,7 +33,7 @@ namespace plotproject.Controllers
         {
             if (license == null)
                 return NotFound();
-            
+
             var vehicle = await _context.Vehicle.SingleOrDefaultAsync(m => m.License == license);
 
             TempData["license"] = license;
@@ -93,6 +93,7 @@ namespace plotproject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Enter([Bind("InTime,VehicleLicense,TypeId")] Ticket ticket)
         {
+            ticket.InTime = DateTime.UtcNow;
             if (ModelState.IsValid)
             {
                 _context.Add(ticket);
@@ -112,11 +113,69 @@ namespace plotproject.Controllers
             return View(_context.ParkingSpot.Where(s => s.TypeId == ticket.TypeId && s.VehicleLicense == null));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Park(int id)
+        {
+            var vehicle = _context.Vehicle.Find(HttpContext.Session.GetString("VehicleLicense"));
+            if (vehicle == null)
+                return RedirectToAction(nameof(HomeController.ReadLicense));
+
+            var ticket = await _context.Ticket.FindAsync(HttpContext.Session.GetInt32("TicketId"));
+            if (ticket == null)
+                return RedirectToAction(nameof(HomeController.Enter));
+
+            var parkingSpot = await _context.ParkingSpot.FindAsync(id);
+            if (parkingSpot == null || ticket.TypeId != parkingSpot.TypeId)
+            {
+                if (parkingSpot != null)
+                    ModelState.AddModelError("Type", $"Parking spot type {parkingSpot.Type} does not match ticket type {ticket.Type}");
+                ViewData["parkingSpots"] = await _context.ParkingSpot.ToListAsync();
+                return View(_context.ParkingSpot.Where(s => s.TypeId == ticket.TypeId && s.VehicleLicense == null));
+            }
+
+            parkingSpot.Vehicle = vehicle;
+            vehicle.ParkingSpot = parkingSpot;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(HomeController.Checkout));
+        }
+
         public IActionResult Checkout()
         {
-            ViewData["Message"] = "This is where the driver pays and leaves";
-
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout(DateTime outTime)
+        {
+            var vehicle = _context.Vehicle.Find(HttpContext.Session.GetString("VehicleLicense"));
+            if (vehicle == null)
+                return RedirectToAction(nameof(HomeController.ReadLicense));
+
+            var ticket = await _context.Ticket.FindAsync(HttpContext.Session.GetInt32("TicketId"));
+            if (ticket == null)
+                return RedirectToAction(nameof(HomeController.Enter));
+
+            var parkingSpot = await _context.ParkingSpot.FindAsync(vehicle.ParkingSpot.Number);
+            if (parkingSpot == null)
+                return RedirectToAction(nameof(HomeController.Park));
+
+            if (outTime < ticket.InTime)
+            {
+                ModelState.AddModelError("OutTime", "Out Time must be after In Time");
+                return View();
+            }
+
+            ticket.OutTime = outTime;
+            vehicle.ParkingSpot = null;
+            parkingSpot.Vehicle = null;
+            _context.SaveChanges();
+            HttpContext.Session.Remove("TicketId");
+            HttpContext.Session.Remove("VehicleLicense");
+
+            return RedirectToAction(nameof(HomeController.Index));
         }
 
         public IActionResult Error()
