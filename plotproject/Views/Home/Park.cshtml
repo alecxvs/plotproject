@@ -1,0 +1,17 @@
+﻿@model ParkingSpot
+@{
+    ViewData["Title"] = "Park";
+    <Button>onclick="spot.forEach(myFunction)"</Button>
+}
+
+<div class="grid">
+    <h2>Park</h2>
+    <form asp-action="Park" method="post">
+
+        <Button>Park</Button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

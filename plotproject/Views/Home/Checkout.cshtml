@@ -1,0 +1,48 @@
+﻿@model Ticket
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="grid">
+    <h2>Checkout</h2>
+
+    <form asp-action="Checkout" method="put">
+        @Html.ValidationMessageFor(t => t.VehicleLicense)
+        <br />
+        @Html.LabelFor(t => t.VehicleLicense)
+        @Html.TextBoxFor(t => t.VehicleLicense, new { @readonly = "readonly" })
+
+        @Html.ValidationMessageFor(t => t.Type)
+        <br />
+        @Html.LabelFor(t => t.Type)
+        @Html.ListBoxFor(t => t.Type, new SelectList(ViewData["Types"] as IEnumerable<ParkingType>))
+
+        @Html.LabelFor(t => t.OutTime)
+        @Html.EditorFor(t => t.OutTime)
+        <environment include="Development">
+            <script src="~/lib/luxon/luxon.min.js"></script>
+        </environment>
+        <environment exclude="Development">
+            <script src="https://cdn.jsdelivr.net/npm/luxon@1.2.0/build/cjs-browser/luxon.js"
+                    integrity="sha256-mMmJmS0UZFpH6y0J2pnl5QwC2uiN+LcbMkysZa0b6Jk="
+                    crossorigin="anonymous">
+            </script>
+        </environment>
+        <script type="text/javascript">
+            (function () {
+                function EndTime() {
+                    document.getElementById('EndTime').value = luxon.DateTime.local().toFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    t = setTimeout(function () { EndTime() }, 500);
+                }
+                EndTime();
+            })();
+        </script>
+
+        <Button>Checkout</Button>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
