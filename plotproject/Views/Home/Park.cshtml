@@ -1,13 +1,51 @@
 ﻿@model ParkingSpot
 @{
     ViewData["Title"] = "Park";
-    <Button>onclick="spot.forEach(myFunction)"</Button>
+    var ticket = ViewData["Ticket"] as Ticket;
 }
 
 <div class="grid">
     <h2>Park</h2>
-    <form asp-action="Park" method="post">
+    <div class="grid parkingLot">
+        @foreach (var spot in ViewData["parkingSpots"] as IEnumerable<ParkingSpot>)
+        {
+            @if (ticket.TypeId == spot.TypeId && spot.Vehicle == null)
+            {
+                <a id="@(spot.Number)" class="pSpot type@(spot.TypeId)"
+                   onclick='spotSelect(this); return false' href='#'>
+                    @(spot.Number)
+                </a>
+            }
+            else
+            {
 
+                <a id="@(spot.Number)" class="pSpot type@(spot.TypeId) pDisabled">
+                    @(spot.Number)
+                </a>
+
+            }
+        }
+    </div>
+
+    <script type="text/javascript">
+        function spotSelect(el) {
+            document.getElementById("Number").value = el.id;
+            highlightSpot();
+        }
+
+        function highlightSpot() {
+            for (el of document.getElementsByClassName("pHighlight")) {
+                el.classList.remove("pHighlight");
+            }
+
+            let id = document.getElementById("Number").value;
+            document.getElementById(id).classList.add("pHighlight");
+        }
+    </script>
+    <form asp-action="Park" method="post">
+        @Html.ValidationMessageFor(s => s.Number)
+        @Html.LabelFor(s => s.Number)
+        @Html.TextBoxFor(s => s.Number, new { @readonly = "readonly" })
         <Button>Park</Button>
     </form>
 </div>

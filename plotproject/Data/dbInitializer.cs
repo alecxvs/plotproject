@@ -17,13 +17,16 @@ namespace plotproject.Data
 
             var standardType = new ParkingType { Description = "Standard" };
             var handicapType = new ParkingType { Description = "Handicap" };
-            context.ParkingType.Add(standardType);
+            context.ParkingType.Add(standardType);  
             context.ParkingType.Add(handicapType);
+            context.SaveChanges();
 
             foreach (var i in Enumerable.Range(1, 24))
             {
                 context.ParkingSpot.Add(new ParkingSpot { Type = standardType });
             }
+
+            context.SaveChanges();
 
             foreach (var i in Enumerable.Range(1, 6))
             {

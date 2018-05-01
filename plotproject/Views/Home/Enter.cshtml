@@ -16,7 +16,7 @@
         @Html.ValidationMessageFor(t => t.Type)
         <br />
         @Html.LabelFor(t => t.Type)
-        @Html.ListBoxFor(t => t.Type, new SelectList(ViewData["Types"] as IEnumerable<ParkingType>))
+        @Html.ListBoxFor(t => t.TypeId, new SelectList(ViewData["Types"] as IEnumerable<ParkingType>, "Id", "Description"))
 
         @Html.LabelFor(t => t.InTime)
         @Html.EditorFor(t => t.InTime)

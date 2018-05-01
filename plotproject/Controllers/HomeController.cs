@@ -79,11 +79,12 @@ namespace plotproject.Controllers
             var ticket = await _context.Ticket.SingleOrDefaultAsync(t => t.VehicleLicense == vehicle.License && t.OutTime == null);
             if (ticket != null)
             {
+                HttpContext.Session.SetInt32("TicketId", ticket.Id);
                 // If the ticket is open, and the vehicle has a parking spot, go to checkout
                 if (vehicle.ParkingSpot != null)
                     return RedirectToAction(nameof(HomeController.Checkout), new { ticket });
                 // If the ticket is open but the vehicle is not parked, go to parking
-                return RedirectToAction(nameof(HomeController.Park), new { vehicle });
+                return RedirectToAction(nameof(HomeController.Park), new { vehicle.ParkingSpot?.Number });
             }
             ViewData["Types"] = await _context.ParkingType.ToListAsync();
             return View();
@@ -109,13 +110,14 @@ namespace plotproject.Controllers
             var ticket = await _context.Ticket.FindAsync(HttpContext.Session.GetInt32("TicketId"));
             if (ticket == null)
                 return RedirectToAction(nameof(HomeController.Enter));
+            ViewData["Ticket"] = ticket;
             ViewData["parkingSpots"] = await _context.ParkingSpot.ToListAsync();
-            return View(_context.ParkingSpot.Where(s => s.TypeId == ticket.TypeId && s.VehicleLicense == null));
+            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Park(int id)
+        public async Task<IActionResult> Park(int Number)
         {
             var vehicle = _context.Vehicle.Find(HttpContext.Session.GetString("VehicleLicense"));
             if (vehicle == null)
@@ -125,13 +127,14 @@ namespace plotproject.Controllers
             if (ticket == null)
                 return RedirectToAction(nameof(HomeController.Enter));
 
-            var parkingSpot = await _context.ParkingSpot.FindAsync(id);
+            var parkingSpot = await _context.ParkingSpot.FindAsync(Number);
             if (parkingSpot == null || ticket.TypeId != parkingSpot.TypeId)
             {
                 if (parkingSpot != null)
                     ModelState.AddModelError("Type", $"Parking spot type {parkingSpot.Type} does not match ticket type {ticket.Type}");
                 ViewData["parkingSpots"] = await _context.ParkingSpot.ToListAsync();
-                return View(_context.ParkingSpot.Where(s => s.TypeId == ticket.TypeId && s.VehicleLicense == null));
+                ViewData["Ticket"] = ticket;
+                return View(parkingSpot);
             }
 
             parkingSpot.Vehicle = vehicle;
@@ -148,8 +151,9 @@ namespace plotproject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Checkout(DateTime outTime)
+        public async Task<IActionResult> Checkout(DateTime OutTime)
         {
+            var outTime = DateTime.UtcNow;
             var vehicle = _context.Vehicle.Find(HttpContext.Session.GetString("VehicleLicense"));
             if (vehicle == null)
                 return RedirectToAction(nameof(HomeController.ReadLicense));

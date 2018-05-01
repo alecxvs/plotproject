@@ -16,7 +16,7 @@ namespace plotproject.Models
         public string Model { get; set; }
         [Required]
         public string Color { get; set; }
-        public ParkingSpot ParkingSpot { get; set; }
+        public virtual ParkingSpot ParkingSpot { get; set; }
 
         public override string ToString()
         {

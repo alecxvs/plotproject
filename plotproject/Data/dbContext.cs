@@ -15,6 +15,13 @@ namespace plotproject.Models
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Ticket>()
+                .Property(t => t.OutTime)
+                .HasDefaultValue(null);
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableLogging(true);

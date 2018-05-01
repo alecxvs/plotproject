@@ -9,15 +9,15 @@ namespace plotproject.Models
         public int Id { get; set; }
         [Required]
         public DateTime InTime { get; set; }
-        public DateTime OutTime { get; set; }
+        public DateTime? OutTime { get; set; }
         [Required]
         public String VehicleLicense { get; set; }
         [ForeignKey("VehicleLicense")]
-        public Vehicle Vehicle { get; set; }
+        public virtual Vehicle Vehicle { get; set; }
         [Required]
         public int TypeId { get; set; }
         [ForeignKey("TypeId")]
-        public ParkingType Type { get; set; }
+        public virtual ParkingType Type { get; set; }
 
         public override string ToString()
         {

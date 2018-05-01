@@ -34,3 +34,35 @@ header {
     justify-items: center;
     justify-content: center;
 }
+
+.grid.parkingLot {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.grid.parkingLot form {
+    grid-column: span 5;
+}
+
+.pSpot {
+    border: 2px outset darkgray;
+    height: 3em;
+    width: 2em;
+    background-color: white;
+    text-align: center;
+}
+
+.pSpot.type2 {
+    color: blue;
+}
+
+.pSpot.pDisabled {
+    border: 1px solid gray;
+    background-color: lightgray;
+    color: gray;
+}
+
+.pSpot.pHighlight {
+    border: 2px inset yellow;
+    background-color: lightyellow;
+}
+

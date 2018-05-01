@@ -11,7 +11,7 @@ namespace plotproject.Models
         [ConcurrencyCheck]
         public String VehicleLicense { get; set; }
         [ForeignKey("VehicleLicense")]
-        public Vehicle Vehicle { get; set; }
+        public virtual Vehicle Vehicle { get; set; }
         [Required]
         public int TypeId { get; set; }
         [ForeignKey("TypeId")]
