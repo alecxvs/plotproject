@@ -80,9 +80,10 @@ namespace plotproject.Controllers
             if (ticket != null)
             {
                 HttpContext.Session.SetInt32("TicketId", ticket.Id);
+                _context.Entry(vehicle).Reference("ParkingSpot").Load();
                 // If the ticket is open, and the vehicle has a parking spot, go to checkout
                 if (vehicle.ParkingSpot != null)
-                    return RedirectToAction(nameof(HomeController.Checkout), new { ticket });
+                    return RedirectToAction(nameof(HomeController.Checkout), new { ticket.Id });
                 // If the ticket is open but the vehicle is not parked, go to parking
                 return RedirectToAction(nameof(HomeController.Park), new { vehicle.ParkingSpot?.Number });
             }
@@ -141,12 +142,12 @@ namespace plotproject.Controllers
             vehicle.ParkingSpot = parkingSpot;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(HomeController.Checkout));
+            return RedirectToAction(nameof(HomeController.Checkout), new { ticket.Id });
         }
 
-        public IActionResult Checkout()
+        public IActionResult Checkout(int Id)
         {
-            return View();
+            return View(_context.Ticket.Find(Id));
         }
 
         [HttpPost]
@@ -162,7 +163,8 @@ namespace plotproject.Controllers
             if (ticket == null)
                 return RedirectToAction(nameof(HomeController.Enter));
 
-            var parkingSpot = await _context.ParkingSpot.FindAsync(vehicle.ParkingSpot.Number);
+            _context.Entry(vehicle).Reference("ParkingSpot").Load();
+            var parkingSpot = vehicle.ParkingSpot;
             if (parkingSpot == null)
                 return RedirectToAction(nameof(HomeController.Park));
 
